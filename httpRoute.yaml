@@ -1,0 +1,22 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: httpbin
+spec:
+  parentRefs:
+    - name: mygateway # Gateway resource의 name 참조
+      namespace: mysystem
+  hostnames:
+    - "a.example.com"
+    - "b.example.com"
+  rules:
+    - matches:
+        - path: # /status path를 prefix로 하는 traffic에 대해 적용
+            type: PathPrefix
+            value: /status
+        - path: # /delay path를 prefix로 하는 traffic에 대해 적용
+            type: PathPrefix
+            value: /delay
+      backendRefs: # httpbin service의 8000 port로 traffic을 routing
+        - name: httpbin
+          port: 8000

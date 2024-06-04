@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: Gateway
+metadata:
+  name: mygateway # HTTPRoute resource에서 사용할 이름
+  namespace: mysystem
+spec:
+  gatewayClassName: istio-gateway # GatewayClass resource의 name 참조
+  listeners:
+    - name: http-a # 80 port의 HTTP로 a.example.com의 host traffic을 수신
+      hostname: "a.example.com"
+      port: 80
+      protocol: HTTP
+    - name: https-b # 443 port의 HTTPS로 b.example.com의 host traffic을 수신
+      hostname: "b.example.com"
+      port: 443
+      protocol: HTTPS
+      tls: # mygateway-credential secret에 저장된 certificate 적용
+        mode: Terminate
+        certificateRefs:
+          - name: mygateway-credential
